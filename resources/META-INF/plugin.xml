@@ -1,0 +1,31 @@
+<idea-plugin>
+  <id>com.github.novotnyr.idea.rabbitmq</id>
+  <name>RabbitMQ Script Support</name>
+  <version>1.0</version>
+  <vendor email="novotnr0@gmail.com" url="https://github.com/novotnyr/rabbitmq-script-idea-plugin">Róbert Novotny</vendor>
+
+  <description><![CDATA[
+      Adds support for RabbitMQ commands executed via YAML-based scripts
+    ]]></description>
+
+  <change-notes><![CDATA[
+    ]]>
+  </change-notes>
+
+  <idea-version since-build="171.0"/>
+
+  <depends>com.intellij.modules.lang</depends>
+  <depends>org.jetbrains.plugins.yaml</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <configurationType implementation="com.github.novotnyr.idea.rabbitmq.RabbitMqScriptConfigurationType" />
+    <runConfigurationProducer implementation="com.github.novotnyr.idea.rabbitmq.RabbitMqScriptRunConfigurationProducer" />
+
+    <codeInsight.lineMarkerProvider language="yaml" implementationClass="com.github.novotnyr.idea.rabbitmq.YamlLineProvider"/>
+  </extensions>
+
+  <actions>
+    <action class="com.github.novotnyr.idea.rabbitmq.RunRabbitMqScriptAction" id="com.github.novotnyr.idea.rabbitmq.RunRabbitMqScriptAction" />
+  </actions>
+
+</idea-plugin>

@@ -1,0 +1,45 @@
+package com.github.novotnyr.idea.rabbitmq;
+
+import com.github.novotnyr.rabbitmqadmin.command.ExecuteScript;
+import com.github.novotnyr.rabbitmqadmin.log.StdErr;
+import com.intellij.execution.process.ProcessOutputTypes;
+import com.intellij.psi.PsiFile;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
+    private final PsiFile scriptPsiFile;
+
+    public RabbitMqScriptProcessHandler(PsiFile scriptPsiFile) {
+        this.scriptPsiFile = scriptPsiFile;
+    }
+
+    @Override
+    protected Void doCall() {
+        String scriptFile = scriptPsiFile.getVirtualFile().getPath();
+        ExecuteScript executeScript = new ExecuteScript(null);
+        executeScript.setScriptFile(scriptFile);
+        executeScript.setStdErr(new StdErr() {
+            @Override
+            public void println(String s) {
+                notifyTextAvailable(s, ProcessOutputTypes.STDOUT);
+            }
+        });
+        executeScript.run();
+        notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.STDOUT);
+        notifyProcessTerminated(0);
+        return NOTHING;
+    }
+
+    @Override
+    protected Void handleException(Exception e) {
+        StringWriter out = new StringWriter();
+        e.printStackTrace(new PrintWriter(out));
+        notifyTextAvailable(out.toString(), ProcessOutputTypes.STDERR);
+        notifyProcessTerminated(1);
+        return NOTHING;
+    }
+
+
+}
