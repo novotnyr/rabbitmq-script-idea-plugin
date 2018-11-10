@@ -26,8 +26,12 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
         executeScript.setIncludedCommandIndices(Arrays.asList(this.scriptIndex));
         executeScript.setStdErr(new StdErr() {
             @Override
-            public void println(String s) {
-                notifyTextAvailable(s, ProcessOutputTypes.STDOUT);
+            public void println(String message) {
+                StringBuilder text = new StringBuilder(message);
+                if (!message.endsWith(System.lineSeparator())) {
+                    text.append(System.lineSeparator());
+                }
+                notifyTextAvailable(text.toString(), ProcessOutputTypes.STDOUT);
             }
         });
         executeScript.run();
