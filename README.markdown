@@ -14,6 +14,11 @@ Create a YAML file that represents a script which can be executed against Rabbit
 
 Declare a configuration and one or more script command. Each script command can be run from IDE independently.
 
+Screenshot
+----------
+
+![Screenshot](screenshot.png)
+
 Sample Script
 -------------
 
