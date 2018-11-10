@@ -16,16 +16,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class RabbitMqRunProfileState implements RunProfileState {
-    private PsiFile scriptPsiFile;
+    private final PsiFile scriptPsiFile;
+    private final int scriptIndex;
 
-    public RabbitMqRunProfileState(PsiFile scriptPsiFile) {
+    public RabbitMqRunProfileState(PsiFile scriptPsiFile, int scriptIndex) {
         this.scriptPsiFile = scriptPsiFile;
+        this.scriptIndex = scriptIndex;
     }
 
     @Nullable
     @Override
     public ExecutionResult execute(Executor executor, @NotNull ProgramRunner programRunner) throws ExecutionException {
-        ProcessHandler processHandler = new RabbitMqScriptProcessHandler(scriptPsiFile);
+        ProcessHandler processHandler = new RabbitMqScriptProcessHandler(this.scriptPsiFile, this.scriptIndex);
         ConsoleView console = createExecutionConsole();
         console.attachToProcess(processHandler);
         return new DefaultExecutionResult(console, processHandler);

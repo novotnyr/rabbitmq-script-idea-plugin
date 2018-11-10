@@ -7,12 +7,15 @@ import com.intellij.psi.PsiFile;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 
 public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
     private final PsiFile scriptPsiFile;
+    private final int scriptIndex;
 
-    public RabbitMqScriptProcessHandler(PsiFile scriptPsiFile) {
+    public RabbitMqScriptProcessHandler(PsiFile scriptPsiFile, int scriptIndex) {
         this.scriptPsiFile = scriptPsiFile;
+        this.scriptIndex = scriptIndex;
     }
 
     @Override
@@ -20,6 +23,7 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
         String scriptFile = scriptPsiFile.getVirtualFile().getPath();
         ExecuteScript executeScript = new ExecuteScript(null);
         executeScript.setScriptFile(scriptFile);
+        executeScript.setIncludedCommandIndices(Arrays.asList(this.scriptIndex));
         executeScript.setStdErr(new StdErr() {
             @Override
             public void println(String s) {

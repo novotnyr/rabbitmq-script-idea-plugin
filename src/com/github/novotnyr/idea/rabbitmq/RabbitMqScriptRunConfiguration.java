@@ -20,6 +20,7 @@ import javax.swing.JLabel;
 
 public class RabbitMqScriptRunConfiguration extends RunConfigurationBase {
     private PsiFile rabbitMqScriptPsiFile;
+    private int scriptIndex;
 
     protected RabbitMqScriptRunConfiguration(@NotNull Project project, @NotNull ConfigurationFactory factory, String name) {
         super(project, factory, name);
@@ -55,10 +56,18 @@ public class RabbitMqScriptRunConfiguration extends RunConfigurationBase {
     @Nullable
     @Override
     public RunProfileState getState(@NotNull Executor executor, @NotNull ExecutionEnvironment executionEnvironment) throws ExecutionException {
-        return new RabbitMqRunProfileState(this.rabbitMqScriptPsiFile);
+        return new RabbitMqRunProfileState(this.rabbitMqScriptPsiFile, this.scriptIndex);
     }
 
     public void setRabbitMqScriptPsiFile(PsiFile rabbitMqScriptPsiFile) {
         this.rabbitMqScriptPsiFile = rabbitMqScriptPsiFile;
+    }
+
+    public void setScriptIndex(int scriptIndex) {
+        this.scriptIndex = scriptIndex;
+    }
+
+    public int getScriptIndex() {
+        return scriptIndex;
     }
 }
