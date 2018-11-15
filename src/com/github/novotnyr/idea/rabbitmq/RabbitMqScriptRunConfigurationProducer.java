@@ -4,6 +4,7 @@ import com.intellij.execution.Location;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 
 public class RabbitMqScriptRunConfigurationProducer extends com.intellij.execution.actions.RunConfigurationProducer<RabbitMqScriptRunConfiguration> {
     public RabbitMqScriptRunConfigurationProducer() {
@@ -12,9 +13,20 @@ public class RabbitMqScriptRunConfigurationProducer extends com.intellij.executi
 
     @Override
     protected boolean setupConfigurationFromContext(RabbitMqScriptRunConfiguration runConfiguration, ConfigurationContext configurationContext, Ref<PsiElement> ref) {
+        if (ref == null) {
+            return false;
+        }
         PsiElement psiElement = ref.get();
-        runConfiguration.setName(psiElement.getContainingFile().getName());
-        runConfiguration.setRabbitMqScriptPsiFile(psiElement.getContainingFile());
+        if (psiElement == null) {
+            return false;
+        }
+
+        PsiFile scriptFile = psiElement.getContainingFile();
+        if (scriptFile == null) {
+            return false;
+        }
+        runConfiguration.setName(scriptFile.getName());
+        runConfiguration.setRabbitMqScriptPsiFile(scriptFile);
         Location location = configurationContext.getLocation();
         if (location != null) {
             PsiElement element = location.getPsiElement();
