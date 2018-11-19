@@ -3,8 +3,8 @@ package com.github.novotnyr.idea.rabbitmq;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;
+import com.intellij.execution.configurations.LocatableConfigurationBase;
 import com.intellij.execution.configurations.RunConfiguration;
-import com.intellij.execution.configurations.RunConfigurationBase;
 import com.intellij.execution.configurations.RunProfileState;
 import com.intellij.execution.configurations.RuntimeConfigurationException;
 import com.intellij.execution.runners.ExecutionEnvironment;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-public class RabbitMqScriptRunConfiguration extends RunConfigurationBase {
+public class RabbitMqScriptRunConfiguration extends LocatableConfigurationBase {
     private PsiFile rabbitMqScriptPsiFile;
     private int scriptIndex;
 
