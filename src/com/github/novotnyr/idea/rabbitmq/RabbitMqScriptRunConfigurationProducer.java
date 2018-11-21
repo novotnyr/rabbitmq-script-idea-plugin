@@ -5,6 +5,7 @@ import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.openapi.util.Ref;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import org.jetbrains.yaml.YAMLFileType;
 
 public class RabbitMqScriptRunConfigurationProducer extends com.intellij.execution.actions.RunConfigurationProducer<RabbitMqScriptRunConfiguration> {
     public RabbitMqScriptRunConfigurationProducer() {
@@ -22,7 +23,7 @@ public class RabbitMqScriptRunConfigurationProducer extends com.intellij.executi
         }
 
         PsiFile scriptFile = psiElement.getContainingFile();
-        if (scriptFile == null) {
+        if (!(scriptFile instanceof YAMLFileType)) {
             return false;
         }
         runConfiguration.setName(scriptFile.getName());
