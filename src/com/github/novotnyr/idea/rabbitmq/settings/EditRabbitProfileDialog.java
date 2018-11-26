@@ -1,11 +1,14 @@
 package com.github.novotnyr.idea.rabbitmq.settings;
 
+import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
@@ -20,6 +23,7 @@ public class EditRabbitProfileDialog extends DialogWrapper {
     private JTextField virtualHostTextField;
     private JTextField userTextField;
     private JPasswordField passwordTextField;
+    private JComboBox<RabbitConfiguration.Protocol> protocolComboBox;
 
     private RabbitProfile rabbitProfile;
 
@@ -39,6 +43,10 @@ public class EditRabbitProfileDialog extends DialogWrapper {
         this.virtualHostTextField.setText(this.rabbitProfile.getVirtualHost());
         this.userTextField.setText(this.rabbitProfile.getUser());
         this.passwordTextField.setText(this.rabbitProfile.getPassword());
+        DefaultComboBoxModel<RabbitConfiguration.Protocol> protocolComboBoxModel = new DefaultComboBoxModel<>(RabbitConfiguration.Protocol
+                .values());
+        protocolComboBoxModel.setSelectedItem(this.rabbitProfile.getProtocol());
+        this.protocolComboBox.setModel(protocolComboBoxModel);
     }
 
     @Nullable
@@ -65,6 +73,7 @@ public class EditRabbitProfileDialog extends DialogWrapper {
         this.rabbitProfile.setVirtualHost(this.virtualHostTextField.getText());
         this.rabbitProfile.setUser(this.userTextField.getText());
         this.rabbitProfile.setPassword(this.passwordTextField.getText());
+        this.rabbitProfile.setProtocol((RabbitConfiguration.Protocol) this.protocolComboBox.getSelectedItem());
         super.doOKAction();
     }
 

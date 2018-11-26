@@ -66,4 +66,9 @@ public class RabbitProfile {
     public void setPassword(String password) {
         this.rabbitConfiguration.setPassword(password);
     }
+
+    public void setProtocol(RabbitConfiguration.Protocol protocol) {
+        this.rabbitConfiguration.setProtocol(protocol);
+    }
+
 }
