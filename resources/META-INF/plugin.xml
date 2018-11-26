@@ -22,6 +22,11 @@
     <runConfigurationProducer implementation="com.github.novotnyr.idea.rabbitmq.RabbitMqScriptRunConfigurationProducer" />
 
     <codeInsight.lineMarkerProvider language="yaml" implementationClass="com.github.novotnyr.idea.rabbitmq.YamlLineProvider"/>
+    <projectConfigurable instance="com.github.novotnyr.idea.rabbitmq.settings.SettingsUi"/>
+    <projectService serviceImplementation="com.github.novotnyr.idea.rabbitmq.settings.PluginSettings"/>
+    <projectService serviceImplementation="com.github.novotnyr.idea.rabbitmq.editor.FileProfileService"/>
+
+    <editorNotificationProvider implementation="com.github.novotnyr.idea.rabbitmq.editor.ProfileNotificationProvider"/>
   </extensions>
 
   <actions>

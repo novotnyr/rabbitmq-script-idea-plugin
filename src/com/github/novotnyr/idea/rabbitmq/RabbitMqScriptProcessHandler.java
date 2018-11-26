@@ -1,5 +1,6 @@
 package com.github.novotnyr.idea.rabbitmq;
 
+import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
 import com.github.novotnyr.rabbitmqadmin.command.ExecuteScript;
 import com.github.novotnyr.rabbitmqadmin.log.StdErr;
 import com.intellij.execution.process.ProcessOutputTypes;
@@ -12,16 +13,18 @@ import java.util.Arrays;
 public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
     private final PsiFile scriptPsiFile;
     private final int scriptIndex;
+    private final RabbitConfiguration rabbitConfiguration;
 
-    public RabbitMqScriptProcessHandler(PsiFile scriptPsiFile, int scriptIndex) {
+    public RabbitMqScriptProcessHandler(PsiFile scriptPsiFile, int scriptIndex, RabbitConfiguration rabbitConfiguration) {
         this.scriptPsiFile = scriptPsiFile;
         this.scriptIndex = scriptIndex;
+        this.rabbitConfiguration = rabbitConfiguration;
     }
 
     @Override
     protected Void doCall() {
         String scriptFile = scriptPsiFile.getVirtualFile().getPath();
-        ExecuteScript executeScript = new ExecuteScript(null);
+        ExecuteScript executeScript = new ExecuteScript(this.rabbitConfiguration);
         executeScript.setScriptFile(scriptFile);
         executeScript.setIncludedCommandIndices(Arrays.asList(this.scriptIndex));
         executeScript.setStdErr(new StdErr() {
