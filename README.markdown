@@ -6,7 +6,7 @@ JetBrains IDE.
 Requirements
 ============
 
-The scripting plugin runs against REST API provided by RabbitMQ. Currently, only version 3.6.x is supported for message retrievals via `get`. Version 3.7.x is supported for message publications.
+The scripting plugin runs against REST API provided by RabbitMQ.
 
 How To Use
 ==========
