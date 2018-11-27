@@ -147,7 +147,7 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
         private List<RabbitProfile> getRabbitProfiles() {
             PluginSettings pluginSettings = ServiceManager.getService(project, PluginSettings.class);
             List<RabbitProfile> rabbitProfiles = new ArrayList<>(pluginSettings.getRabbitProfiles());
-            rabbitProfiles.add(ImplicitRabbitProfile.INSTANCE);
+            rabbitProfiles.add(0, ImplicitRabbitProfile.INSTANCE);
             return rabbitProfiles;
         }
 
@@ -163,7 +163,7 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
 
         @Override
         public String getName() {
-            return "From File";
+            return "[default] Pick Up From File";
         }
     }
 }
