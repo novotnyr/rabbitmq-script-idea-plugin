@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import java.awt.event.MouseEvent;
 
 public class SettingsUi extends BaseConfigurable implements DumbAware {
@@ -63,6 +64,8 @@ public class SettingsUi extends BaseConfigurable implements DumbAware {
     private void createUIComponents() {
         this.table = new JBTable();
         this.table.setAutoCreateRowSorter(true);
+        this.table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.table.setDefaultRenderer(RabbitProfileTableModel.Password.class, new RabbitProfileTableModel.PasswordTableCellRenderer());
 
         this.tablePanel = ToolbarDecorator.createDecorator(this.table)
                 .setAddAction(this::onAddAction)

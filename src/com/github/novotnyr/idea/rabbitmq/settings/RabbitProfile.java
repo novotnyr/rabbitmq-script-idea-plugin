@@ -71,4 +71,5 @@ public class RabbitProfile {
         this.rabbitConfiguration.setProtocol(protocol);
     }
 
+
 }

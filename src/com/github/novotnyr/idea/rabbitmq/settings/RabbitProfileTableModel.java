@@ -1,6 +1,9 @@
 package com.github.novotnyr.idea.rabbitmq.settings;
 
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,12 +55,31 @@ public class RabbitProfileTableModel extends AbstractTableModel {
             case USER:
                 return profiles.getUser();
             case PASSWORD:
-                return profiles.getPassword();
+                return new Password(profiles.getPassword());
             case PROTOCOL:
                 return profiles.getProtocol();
             default:
                 return "N/A";
         }
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        Column column = Column.values()[columnIndex];
+        switch (column) {
+            case NAME:
+            case HOST:
+            case VHOST:
+            case PORT:
+            case USER:
+            case PROTOCOL:
+                return String.class;
+            case PASSWORD:
+                return Password.class;
+            default:
+                return super.getColumnClass(columnIndex);
+        }
+
     }
 
     @Override
@@ -90,7 +112,33 @@ public class RabbitProfileTableModel extends AbstractTableModel {
     public void setRabbitProfiles(List<RabbitProfile> rabbitProfiles) {
         this.configurations.clear();
         this.configurations.addAll(rabbitProfiles);
+        fireTableDataChanged();
     }
 
+    public static class Password {
+        private String password;
 
+        public Password(String password) {
+            this.password = password;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public boolean isPresent() {
+            return password != null && password.length() > 0;
+        }
+    }
+
+    public static class PasswordTableCellRenderer implements TableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Password password = (Password) value;
+            boolean hasPassword = password != null && password.isPresent();
+            return table.getDefaultRenderer(Boolean.class)
+                    .getTableCellRendererComponent(table, hasPassword, isSelected, hasFocus, row, column);
+        }
+
+    }
 }
