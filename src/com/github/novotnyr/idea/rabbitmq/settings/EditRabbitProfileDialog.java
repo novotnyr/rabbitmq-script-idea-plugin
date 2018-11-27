@@ -47,8 +47,8 @@ public class EditRabbitProfileDialog extends DialogWrapper {
         this.virtualHostTextField.setText(this.rabbitProfile.getVirtualHost());
         this.userTextField.setText(this.rabbitProfile.getUser());
         this.passwordTextField.setText(this.rabbitProfile.getPassword());
-        DefaultComboBoxModel<RabbitConfiguration.Protocol> protocolComboBoxModel = new DefaultComboBoxModel<>(RabbitConfiguration.Protocol
-                .values());
+        RabbitConfiguration.Protocol[] protocols = { RabbitConfiguration.Protocol.HTTP, RabbitConfiguration.Protocol.HTTPS };
+        DefaultComboBoxModel<RabbitConfiguration.Protocol> protocolComboBoxModel = new DefaultComboBoxModel<RabbitConfiguration.Protocol>(protocols);
         protocolComboBoxModel.setSelectedItem(this.rabbitProfile.getProtocol());
         this.protocolComboBox.setModel(protocolComboBoxModel);
     }
