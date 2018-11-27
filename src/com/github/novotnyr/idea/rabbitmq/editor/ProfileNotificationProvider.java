@@ -17,6 +17,10 @@ import org.jetbrains.yaml.YAMLFileType;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,8 +74,24 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
             };
             Optional<String> profile = fileProfileService.getProfile(virtualFile.getPath());
             profile.ifPresent(model::setSelectedItem);
-            ComboBox switcher = new ComboBox(model);
-            this.myLinksPanel.add(switcher);
+            ComboBox profileComboBox = new ComboBox(model);
+            addToLayout(profileComboBox);
+        }
+
+        private void addToLayout(ComboBox switcher) {
+            LayoutManager layout = getLayout();
+            if (layout instanceof BorderLayout) {
+                BorderLayout borderLayout = (BorderLayout) layout;
+                for (int i = 0; i < getComponentCount(); i++) {
+                    Component component = getComponent(i);
+                    if (component instanceof JPanel) {
+                        JPanel panel = (JPanel) component;
+                        // kill all components and replace it with one large combobox
+                        panel.removeAll();
+                        panel.add(switcher);
+                    }
+                }
+            }
         }
 
         protected void onRabbitProfileChanged(RabbitProfile rabbitProfile) {
