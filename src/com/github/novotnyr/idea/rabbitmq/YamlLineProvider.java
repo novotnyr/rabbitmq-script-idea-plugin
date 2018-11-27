@@ -31,6 +31,9 @@ public class YamlLineProvider implements LineMarkerProvider {
     @Nullable
     @Override
     public LineMarkerInfo getLineMarkerInfo(@NotNull PsiElement psiElement) {
+        if (!PsiUtils.isRabbitMqScript(psiElement)) {
+            return NO_LINE_MARKER;
+        }
         if ("---".equals(psiElement.getText())) {
             int scriptIndex = PsiUtils.getScriptIndex(psiElement);
             if (scriptIndex == NO_INDEX) {

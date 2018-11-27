@@ -27,6 +27,8 @@
     <projectService serviceImplementation="com.github.novotnyr.idea.rabbitmq.editor.FileProfileService"/>
 
     <editorNotificationProvider implementation="com.github.novotnyr.idea.rabbitmq.editor.ProfileNotificationProvider"/>
+
+    <fileTypeFactory implementation="com.github.novotnyr.idea.rabbitmq.RabbitMqFileTypeFactory"/>
   </extensions>
 
   <actions>

@@ -1,5 +1,6 @@
 package com.github.novotnyr.idea.rabbitmq;
 
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -10,6 +11,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class PsiUtils {
     public static final int NO_INDEX = -1;
+
+    public static boolean isRabbitMqScript(PsiElement psiElement) {
+        return isRabbitMqScript(psiElement.getContainingFile().getVirtualFile());
+    }
+
+    public static boolean isRabbitMqScript(VirtualFile virtualFile) {
+        return virtualFile.getFileType() instanceof RabbitMqFileType;
+    }
 
     public static int getScriptIndex(@NotNull PsiElement psiElement) {
         if (!"---".equals(psiElement.getText())) {

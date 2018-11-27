@@ -1,5 +1,6 @@
 package com.github.novotnyr.idea.rabbitmq.editor;
 
+import com.github.novotnyr.idea.rabbitmq.PsiUtils;
 import com.github.novotnyr.idea.rabbitmq.settings.PluginSettings;
 import com.github.novotnyr.idea.rabbitmq.settings.RabbitProfile;
 import com.intellij.openapi.components.ServiceManager;
@@ -12,7 +13,6 @@ import com.intellij.ui.EditorNotificationPanel;
 import com.intellij.ui.EditorNotifications;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.yaml.YAMLFileType;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
@@ -45,7 +45,7 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
     @Nullable
     @Override
     public JComponent createNotificationPanel(@NotNull VirtualFile virtualFile, @NotNull FileEditor fileEditor) {
-        if (!(virtualFile.getFileType() instanceof YAMLFileType)) {
+        if (!PsiUtils.isRabbitMqScript(virtualFile)) {
             return null;
         }
         RabbitMqProfileNotificationPanel panel = new RabbitMqProfileNotificationPanel(this.project, this.fileProfileService, virtualFile) {
