@@ -60,6 +60,15 @@ public class RabbitProfileTableModel extends AbstractTableModel {
         }
     }
 
+    @Override
+    public String getColumnName(int column) {
+        return Column.values()[column].getDescription();
+    }
+
+    public RabbitProfile getRabbitProfile(int index) {
+        return this.configurations.get(index);
+    }
+
     public void add(RabbitProfile rabbitProfile) {
         this.configurations.add(rabbitProfile);
         fireTableDataChanged();
@@ -72,6 +81,10 @@ public class RabbitProfileTableModel extends AbstractTableModel {
 
     public List<RabbitProfile> getRabbitProfiles() {
         return this.configurations;
+    }
+
+    public void setRabbitProfile(int index, RabbitProfile rabbitProfile) {
+        this.configurations.set(index, rabbitProfile);
     }
 
     public void setRabbitProfiles(List<RabbitProfile> rabbitProfiles) {

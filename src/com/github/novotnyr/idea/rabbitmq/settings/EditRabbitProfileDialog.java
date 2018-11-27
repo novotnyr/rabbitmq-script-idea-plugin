@@ -27,11 +27,15 @@ public class EditRabbitProfileDialog extends DialogWrapper {
 
     private RabbitProfile rabbitProfile;
 
-    protected EditRabbitProfileDialog(@Nullable Project project) {
+    public EditRabbitProfileDialog(Project project, RabbitProfile rabbitProfile) {
         super(project);
-        this.rabbitProfile = new RabbitProfile();
+        this.rabbitProfile = rabbitProfile;
         init();
         setTitle("Create RabbitMQ Profile");
+    }
+
+    public EditRabbitProfileDialog(Project project) {
+        this(project, new RabbitProfile());
     }
 
     @Override

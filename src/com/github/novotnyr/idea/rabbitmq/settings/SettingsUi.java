@@ -1,18 +1,22 @@
 package com.github.novotnyr.idea.rabbitmq.settings;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.BaseConfigurable;
 import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.AnActionButton;
+import com.intellij.ui.DoubleClickListener;
 import com.intellij.ui.ToolbarDecorator;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.table.JBTable;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import java.awt.event.MouseEvent;
 
 public class SettingsUi extends BaseConfigurable implements DumbAware {
 
@@ -27,7 +31,7 @@ public class SettingsUi extends BaseConfigurable implements DumbAware {
 
     public SettingsUi(Project project) {
         this.project = project;
-        this.tablePanel.add(this.table);
+        this.tablePanel.add(new JBScrollPane(this.table));
 
         this.table.setModel(this.profileTableModel);
     }
@@ -58,12 +62,22 @@ public class SettingsUi extends BaseConfigurable implements DumbAware {
 
     private void createUIComponents() {
         this.table = new JBTable();
+        this.table.setAutoCreateRowSorter(true);
 
         this.tablePanel = ToolbarDecorator.createDecorator(this.table)
                 .setAddAction(this::onAddAction)
                 .setRemoveAction(this::onRemoveAction)
+                .setRemoveActionUpdater(this::removeActionUpdate)
+                .setEditAction(this::onEditAction)
                 .disableUpDownActions()
                 .createPanel();
+        new DoubleClickListener() {
+            @Override
+            protected boolean onDoubleClick(MouseEvent mouseEvent) {
+                onEditAction(null);
+                return true;
+            }
+        }.installOn(this.table);
     }
 
     private void onAddAction(AnActionButton anActionButton) {
@@ -76,9 +90,25 @@ public class SettingsUi extends BaseConfigurable implements DumbAware {
     }
 
     private void onRemoveAction(AnActionButton anActionButton) {
-        if (this.table.getSelectedRow() >= 0) {
-            this.profileTableModel.removeAtIndex(this.table.getSelectedRow());
+        this.profileTableModel.removeAtIndex(this.table.getSelectedRow());
+        setModified(true);
+    }
+
+    private boolean removeActionUpdate(AnActionEvent event) {
+        return table.getSelectedRow() > -1;
+    }
+
+    private void onEditAction(@Nullable AnActionButton anActionButton) {
+        int selectedRow = this.table.getSelectedRow();
+        RabbitProfile rabbitProfile = this.profileTableModel.getRabbitProfile(selectedRow);
+
+        EditRabbitProfileDialog dialog = new EditRabbitProfileDialog(this.project, rabbitProfile);
+        if (dialog.showAndGet()) {
+            RabbitProfile updatedRabbitProfile = dialog.getRabbitProfile();
+            this.profileTableModel.setRabbitProfile(selectedRow, updatedRabbitProfile);
             setModified(true);
         }
     }
+
+
 }
