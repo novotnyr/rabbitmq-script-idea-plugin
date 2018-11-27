@@ -24,6 +24,7 @@ Sample Script
 
     ---
     host: localhost
+    port: 15672
     user: guest
     password: guest
     protocol: http
@@ -39,7 +40,7 @@ Sample Script
 
 The script consists of multiple YAML documents.
 
-*    first document represents a mandatory *configuration* that is applied for the subsequent commands.
+*    first document represents a an optional *configuration* that is applied for the subsequent commands.
 *    subsequent YAML document correspond to *script commands*
 
 Script Syntax
@@ -50,9 +51,21 @@ Configuration
 
 * `host`: hostname of RabbitMQ installation
 * `user`: RabbitMQ user used for authentication
+* `port`: port that is used to reach the RabbitMQ API. Optional. Can be deduced from protocol.
 * `password`: RabbitMQ password used for authentication
 * `vhost`: RabbitMQ Virtual Host used for connections
-* `protocol`: currently, only `http` is supported. This is using RabbitMQ REST API exposed by [RabbitMQ `management` plugin](https://www.rabbitmq.com/management.html)
+* `protocol`:
+    * `HTTP` or `http`: This is using RabbitMQ REST API exposed by [RabbitMQ `management` plugin](https://www.rabbitmq.com/management.html). It is implicitly associated with 15672 port.
+    * `HTTPS` or `https`: SSL/TLS based version of HTTP protocol. It is implicitly associated with 15671 port.
+
+Configuration can be omitted. However, it is necessary to provide an empty document!
+
+This is an example of a minimalistic script with implicit configuration.
+Please observe a double line indicating an empty first document.
+
+    ---
+    ---
+    get: cabbage
 
 `publish` Command
 -----------------
@@ -86,3 +99,14 @@ Configuration
 * `get`: name of the queue used to consume the message
 
 The message will be consumed with acknowledgement and no requeuing by default.
+
+Profiles
+========
+Each script can be run with an explicit configuration profile. This profile
+can be configured in IDE Preferences (*Other Settings* | *RabbitMQ Script*).
+
+You may configure one or more profiles with individual host, user and further
+configuration.
+
+When opening a script, you can pick an active profile from a combobox on the
+top of the editor window.
