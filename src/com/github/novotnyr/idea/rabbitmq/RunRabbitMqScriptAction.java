@@ -1,7 +1,6 @@
 package com.github.novotnyr.idea.rabbitmq;
 
 import com.intellij.execution.ExecutionManager;
-import com.intellij.execution.RunManager;
 import com.intellij.execution.RunnerAndConfigurationSettings;
 import com.intellij.execution.actions.ConfigurationContext;
 import com.intellij.execution.actions.ConfigurationFromContext;
@@ -34,8 +33,6 @@ public class RunRabbitMqScriptAction extends AnAction {
             return;
         }
         RunnerAndConfigurationSettings settings = fromContext.getConfigurationSettings();
-        RunManager runManager = RunManager.getInstance(project);
-        runManager.setSelectedConfiguration(settings);
         ExecutionEnvironmentBuilder builder = ExecutionEnvironmentBuilder.createOrNull(DefaultRunExecutor.getRunExecutorInstance(), settings);
         if (builder != null) {
             ExecutionManager.getInstance(project).restartRunProfile(builder.build());
