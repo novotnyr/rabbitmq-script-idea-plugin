@@ -59,6 +59,14 @@ public class SettingsUi extends BaseConfigurable implements DumbAware {
     public void apply() throws ConfigurationException {
         PluginSettings pluginSettings = ServiceManager.getService(this.project, PluginSettings.class);
         pluginSettings.setRabbitProfiles(this.profileTableModel.getRabbitProfiles());
+
+        notifyPluginSettingsApplied();
+    }
+
+    private void notifyPluginSettingsApplied() {
+        project.getMessageBus()
+                .syncPublisher(PluginSettingsNotifier.PLUGIN_SETTINGS_APPLIED_TOPIC)
+                .notifyPluginSettingsApplied();
     }
 
     private void createUIComponents() {

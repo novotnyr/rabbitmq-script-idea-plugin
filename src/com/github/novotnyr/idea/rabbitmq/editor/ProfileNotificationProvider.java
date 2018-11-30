@@ -2,6 +2,7 @@ package com.github.novotnyr.idea.rabbitmq.editor;
 
 import com.github.novotnyr.idea.rabbitmq.PsiUtils;
 import com.github.novotnyr.idea.rabbitmq.settings.PluginSettings;
+import com.github.novotnyr.idea.rabbitmq.settings.PluginSettingsNotifier;
 import com.github.novotnyr.idea.rabbitmq.settings.RabbitProfile;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -58,24 +59,32 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
         return panel;
     }
 
-    public static class RabbitMqProfileNotificationPanel extends EditorNotificationPanel {
+    public static class RabbitMqProfileNotificationPanel extends EditorNotificationPanel implements PluginSettingsNotifier {
         private final FileProfileService fileProfileService;
+
+        private final ComboBox profileComboBox;
+
+        private final RabbitProfileComboBoxModel profileComboBoxModel;
+
+        @NotNull
+        private final VirtualFile virtualFile;
 
         public RabbitMqProfileNotificationPanel(Project project, FileProfileService fileProfileService, VirtualFile virtualFile) {
             this.fileProfileService = fileProfileService;
-            PluginSettings pluginSettings = ServiceManager.getService(project, PluginSettings.class);
-            pluginSettings.getRabbitProfiles();
-
-            RabbitProfileComboBoxModel model = new RabbitProfileComboBoxModel(project) {
+            this.profileComboBoxModel = new RabbitProfileComboBoxModel(project) {
                 @Override
                 protected void fireSelectionChanged(RabbitProfile selectedRabbitProfile) {
                     RabbitMqProfileNotificationPanel.this.onRabbitProfileChanged(selectedRabbitProfile);
                 }
             };
+            this.virtualFile = virtualFile;
             Optional<String> profile = fileProfileService.getProfile(virtualFile.getPath());
-            profile.ifPresent(model::setSelectedItem);
-            ComboBox profileComboBox = new ComboBox(model);
-            addToLayout(profileComboBox);
+            profile.ifPresent(profileComboBoxModel::setSelectedItem);
+            this.profileComboBox = new ComboBox(profileComboBoxModel);
+            addToLayout(this.profileComboBox);
+
+
+            project.getMessageBus().connect().subscribe(PluginSettingsNotifier.PLUGIN_SETTINGS_APPLIED_TOPIC, this);
         }
 
         private void addToLayout(ComboBox switcher) {
@@ -95,7 +104,12 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
         }
 
         protected void onRabbitProfileChanged(RabbitProfile rabbitProfile) {
-            // do  nothing
+            this.fileProfileService.setProfile(this.virtualFile.getPath(), rabbitProfile.getName());
+        }
+
+        @Override
+        public void notifyPluginSettingsApplied() {
+            this.profileComboBoxModel.refresh();
         }
     }
 
@@ -104,23 +118,26 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
 
         private RabbitProfile selectedRabbitProfile = new ImplicitRabbitProfile();
 
+        private List<RabbitProfile> rabbitProfiles = new ArrayList<>();
+
         public RabbitProfileComboBoxModel(Project project) {
             this.project = project;
+            refresh();
         }
 
         @Override
         public int getSize() {
-            return getRabbitProfiles().size();
+            return this.rabbitProfiles.size();
         }
 
         @Override
         public String getElementAt(int index) {
-            return render(getRabbitProfiles().get(index));
+            return render(this.rabbitProfiles.get(index));
         }
 
         @Override
         public void setSelectedItem(Object anItem) {
-            for (RabbitProfile rabbitProfile : getRabbitProfiles()) {
+            for (RabbitProfile rabbitProfile : this.rabbitProfiles) {
                 if (rabbitProfile.getName().equals(anItem)) {
                     this.selectedRabbitProfile = rabbitProfile;
                     fireSelectionChanged(this.selectedRabbitProfile);
@@ -135,27 +152,30 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
         @Override
         public String getSelectedItem() {
             if (this.selectedRabbitProfile == null) {
-                if (getRabbitProfiles().isEmpty()) {
+                if (this.rabbitProfiles.isEmpty()) {
                     return null;
                 } else {
-                    this.selectedRabbitProfile = getRabbitProfiles().get(0);
+                    this.selectedRabbitProfile = this.rabbitProfiles.get(0);
                 }
             }
             return render(this.selectedRabbitProfile);
-        }
-
-        private List<RabbitProfile> getRabbitProfiles() {
-            PluginSettings pluginSettings = ServiceManager.getService(project, PluginSettings.class);
-            List<RabbitProfile> rabbitProfiles = new ArrayList<>(pluginSettings.getRabbitProfiles());
-            rabbitProfiles.add(0, ImplicitRabbitProfile.INSTANCE);
-            return rabbitProfiles;
         }
 
         private String render(RabbitProfile rabbitProfile) {
             return rabbitProfile.getName().toString();
         }
 
+        public void refresh() {
+            int oldSize = this.rabbitProfiles.size();
+            fireIntervalRemoved(this, 0, oldSize - 1);
 
+            PluginSettings pluginSettings = ServiceManager.getService(project, PluginSettings.class);
+            List<RabbitProfile> rabbitProfiles = new ArrayList<>(pluginSettings.getRabbitProfiles());
+            rabbitProfiles.add(0, ImplicitRabbitProfile.INSTANCE);
+
+            this.rabbitProfiles = rabbitProfiles;
+            fireIntervalAdded(this, 0, rabbitProfiles.size() - 1);
+        }
     }
 
     public static class ImplicitRabbitProfile extends RabbitProfile {
