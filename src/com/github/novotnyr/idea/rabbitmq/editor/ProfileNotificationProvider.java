@@ -24,7 +24,6 @@ import java.awt.Component;
 import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class ProfileNotificationProvider extends EditorNotifications.Provider {
     private static final Key<EditorNotificationPanel> KEY = Key.create("com.github.novotnyr.idea.rabbitmq.editor.ProfileNotificationProvider");
@@ -78,8 +77,8 @@ public class ProfileNotificationProvider extends EditorNotifications.Provider {
                 }
             };
             this.virtualFile = virtualFile;
-            Optional<String> profile = fileProfileService.getProfile(virtualFile.getPath());
-            profile.ifPresent(profileComboBoxModel::setSelectedItem);
+            fileProfileService.getProfile(virtualFile.getPath())
+                    .ifPresent(this.profileComboBoxModel::setSelectedItem);
             this.profileComboBox = new ComboBox(profileComboBoxModel);
             addToLayout(this.profileComboBox);
 

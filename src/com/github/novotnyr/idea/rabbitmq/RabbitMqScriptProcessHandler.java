@@ -2,6 +2,8 @@ package com.github.novotnyr.idea.rabbitmq;
 
 import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
 import com.github.novotnyr.rabbitmqadmin.command.ExecuteScript;
+import com.github.novotnyr.rabbitmqadmin.command.GetMessage;
+import com.github.novotnyr.rabbitmqadmin.command.script.GetMessageStdErrOutputSerializer;
 import com.github.novotnyr.rabbitmqadmin.log.StdErr;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.psi.PsiFile;
@@ -27,7 +29,7 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
         ExecuteScript executeScript = new ExecuteScript(this.rabbitConfiguration);
         executeScript.setScriptFile(scriptFile);
         executeScript.setIncludedCommandIndices(Arrays.asList(this.scriptIndex));
-        executeScript.setStdErr(new StdErr() {
+        StdErr stdErr = new StdErr() {
             @Override
             public void println(String message) {
                 StringBuilder text = new StringBuilder(message);
@@ -36,11 +38,17 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
                 }
                 notifyTextAvailable(text.toString(), ProcessOutputTypes.STDOUT);
             }
-        });
+        };
+        executeScript.setStdErr(stdErr);
+        configureOutputSerializers(executeScript, stdErr);
         executeScript.run();
-        notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.STDOUT);
+        notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM);
         notifyProcessTerminated(0);
         return NOTHING;
+    }
+
+    private void configureOutputSerializers(ExecuteScript executeScript, StdErr stdErr) {
+        executeScript.setOutputSerializer(GetMessage.class, new GetMessageStdErrOutputSerializer(stdErr));
     }
 
     @Override
