@@ -1,8 +1,11 @@
 package com.github.novotnyr.idea.rabbitmq;
 
+import com.github.novotnyr.idea.rabbitmq.console.PublishToExchangeOutputSerializer;
+import com.github.novotnyr.idea.rabbitmq.console.StdOut;
 import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
 import com.github.novotnyr.rabbitmqadmin.command.ExecuteScript;
 import com.github.novotnyr.rabbitmqadmin.command.GetMessage;
+import com.github.novotnyr.rabbitmqadmin.command.PublishToExchange;
 import com.github.novotnyr.rabbitmqadmin.command.script.GetMessageStdErrOutputSerializer;
 import com.github.novotnyr.rabbitmqadmin.log.StdErr;
 import com.intellij.execution.process.ProcessOutputTypes;
@@ -36,19 +39,30 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
                 if (!message.endsWith(System.lineSeparator())) {
                     text.append(System.lineSeparator());
                 }
+                notifyTextAvailable(text.toString(), ProcessOutputTypes.STDERR);
+            }
+        };
+        StdOut stdOut = new StdOut() {
+            @Override
+            public void println(String message) {
+                StringBuilder text = new StringBuilder(message);
+                if (!message.endsWith(System.lineSeparator())) {
+                    text.append(System.lineSeparator());
+                }
                 notifyTextAvailable(text.toString(), ProcessOutputTypes.STDOUT);
             }
         };
         executeScript.setStdErr(stdErr);
-        configureOutputSerializers(executeScript, stdErr);
+        configureOutputSerializers(executeScript, stdOut, stdErr);
         executeScript.run();
         notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM);
         notifyProcessTerminated(0);
         return NOTHING;
     }
 
-    private void configureOutputSerializers(ExecuteScript executeScript, StdErr stdErr) {
+    private void configureOutputSerializers(ExecuteScript executeScript, StdOut stdOut, StdErr stdErr) {
         executeScript.setOutputSerializer(GetMessage.class, new GetMessageStdErrOutputSerializer(stdErr));
+        executeScript.setOutputSerializer(PublishToExchange.class, new PublishToExchangeOutputSerializer(stdOut, stdErr));
     }
 
     @Override
