@@ -7,12 +7,14 @@ import com.intellij.execution.configurations.RunConfiguration;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.Icon;
+
 public class RabbitMqScriptConfigurationType extends ConfigurationTypeBase {
 
     private final ConfigurationFactory factory;
 
     protected RabbitMqScriptConfigurationType() {
-        super("com.github.novotnyr.rabbitmq.RabbitMqScriptConfigurationType", "RabbitMQ", "Run RabbitMQ", null);
+        super("com.github.novotnyr.rabbitmq.RabbitMqScriptConfigurationType", "RabbitMQ", "Run RabbitMQ", (Icon) null);
         this.factory = new ConfigurationFactory(this) {
             @NotNull
             @Override
