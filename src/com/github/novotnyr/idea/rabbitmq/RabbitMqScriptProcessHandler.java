@@ -28,6 +28,9 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
 
     @Override
     protected Void doCall() {
+        if (!isValidConfiguration()) {
+            return NOTHING;
+        }
         String scriptFile = this.scriptPsiFile.getVirtualFile().getPath();
         ExecuteScript executeScript = new ExecuteScript(this.rabbitConfiguration);
         executeScript.setScriptFile(scriptFile);
@@ -58,6 +61,14 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
         notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM);
         notifyProcessTerminated(0);
         return NOTHING;
+    }
+
+    private boolean isValidConfiguration() {
+        if (this.rabbitConfiguration == null) {
+            notifyTextAvailable("No RabbitMQ configuration is provided. Please configure it in a script file or create a profile", ProcessOutputTypes.STDERR);
+            return false;
+        }
+        return true;
     }
 
     private void configureOutputSerializers(ExecuteScript executeScript, StdOut stdOut, StdErr stdErr) {
