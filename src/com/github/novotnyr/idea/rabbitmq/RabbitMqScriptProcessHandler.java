@@ -13,7 +13,7 @@ import com.intellij.psi.PsiFile;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Arrays;
+import java.util.Collections;
 
 public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
     private final PsiFile scriptPsiFile;
@@ -28,10 +28,10 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
 
     @Override
     protected Void doCall() {
-        String scriptFile = scriptPsiFile.getVirtualFile().getPath();
+        String scriptFile = this.scriptPsiFile.getVirtualFile().getPath();
         ExecuteScript executeScript = new ExecuteScript(this.rabbitConfiguration);
         executeScript.setScriptFile(scriptFile);
-        executeScript.setIncludedCommandIndices(Arrays.asList(this.scriptIndex));
+        executeScript.setIncludedCommandIndices(Collections.singletonList(this.scriptIndex));
         StdErr stdErr = new StdErr() {
             @Override
             public void println(String message) {
