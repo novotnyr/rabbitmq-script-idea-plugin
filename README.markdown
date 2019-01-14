@@ -32,6 +32,9 @@ Sample Script
     ---
     publish: amq.default
     routing-key: cabbage
+    headers:
+      X-Correlation-ID: 12cba88f
+      X-Domain: vegetables
     json: >
       {
           "message" : "Message number five"
@@ -79,6 +82,9 @@ Please observe a double line indicating an empty first document.
       {
           "message" : "Message number five"
       }
+    headers:
+      X-Correlation-ID: 12cba88f
+      X-Domain: vegetables
     reply-to: reply
 
 
@@ -86,6 +92,7 @@ Please observe a double line indicating an empty first document.
 * `routing-key`: routing key used with the message publication
 * `json`: provide a JSON payload. Message will be sent with `application/json` content type
 * `payload`: an alternative to `json` key. A string message will be sent.
+* `headers`: a map of message headers and values. Please note that these are *headers*, not *properties*!
 * `reply-to`: indicates a RPC message. This is mapped to `reply_to` property of the AMQP protocol.
 
 `get` Command
