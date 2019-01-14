@@ -66,6 +66,7 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
     private boolean isValidConfiguration() {
         if (this.rabbitConfiguration == null) {
             notifyTextAvailable("No RabbitMQ configuration is provided. Please configure it in a script file or create a profile", ProcessOutputTypes.STDERR);
+            notifyProcessTerminated(1);
             return false;
         }
         return true;
