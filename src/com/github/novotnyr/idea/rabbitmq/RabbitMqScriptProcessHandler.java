@@ -3,9 +3,11 @@ package com.github.novotnyr.idea.rabbitmq;
 import com.github.novotnyr.idea.rabbitmq.console.PublishToExchangeOutputSerializer;
 import com.github.novotnyr.idea.rabbitmq.console.StdOut;
 import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
+import com.github.novotnyr.rabbitmqadmin.RabbitMqConnectionException;
 import com.github.novotnyr.rabbitmqadmin.command.ExecuteScript;
 import com.github.novotnyr.rabbitmqadmin.command.GetMessage;
 import com.github.novotnyr.rabbitmqadmin.command.PublishToExchange;
+import com.github.novotnyr.rabbitmqadmin.command.RabbitMqAccessDeniedException;
 import com.github.novotnyr.rabbitmqadmin.command.script.GetMessageStdErrOutputSerializer;
 import com.github.novotnyr.rabbitmqadmin.log.StdErr;
 import com.intellij.execution.process.ProcessOutputTypes;
@@ -57,10 +59,21 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
         };
         executeScript.setStdErr(stdErr);
         configureOutputSerializers(executeScript, stdOut, stdErr);
-        executeScript.run();
-        notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM);
-        notifyProcessTerminated(0);
+        run(executeScript);
         return NOTHING;
+    }
+
+    private void run(ExecuteScript executeScript) {
+        try {
+            executeScript.run();
+            notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM);
+            notifyProcessTerminated(0);
+        } catch (RabbitMqConnectionException e) {
+            notifyTextAvailable(e.getMessage(), ProcessOutputTypes.STDERR);
+        } catch (RabbitMqAccessDeniedException e) {
+            notifyTextAvailable("Access denied to RabbitMQ broker. Please verify the credentials", ProcessOutputTypes.STDERR);
+            notifyProcessTerminated(3);
+        }
     }
 
     private boolean isValidConfiguration() {
