@@ -10,7 +10,7 @@ The scripting plugin runs against REST API provided by RabbitMQ.
 
 How To Use
 ==========
-Create a YAML file that represents a script which can be executed against RabbitMQ broker.
+Create a YAML file with a `.rabbitmq` extension that represents a script which can be executed against RabbitMQ broker.
 
 Declare a configuration and one or more script command. Each script command can be run from IDE independently.
 
