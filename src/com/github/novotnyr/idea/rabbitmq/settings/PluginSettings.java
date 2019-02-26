@@ -79,7 +79,7 @@ public class PluginSettings implements PersistentStateComponent<PluginSettings.S
     }
 
     private CredentialAttributes getCredentialAttributes(RabbitProfile rabbitProfile) {
-        String serviceName = NAME;
+        String serviceName = NAME + ":" + rabbitProfile.getName();
         String userName = rabbitProfile.getName();
         return new CredentialAttributes(serviceName, userName, this.getClass(), false);
     }
