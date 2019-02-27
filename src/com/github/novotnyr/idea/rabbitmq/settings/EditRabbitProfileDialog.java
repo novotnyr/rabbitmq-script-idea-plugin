@@ -8,6 +8,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
@@ -24,6 +25,7 @@ public class EditRabbitProfileDialog extends DialogWrapper {
     private JTextField userTextField;
     private JPasswordField passwordTextField;
     private JComboBox<RabbitConfiguration.Protocol> protocolComboBox;
+    private JCheckBox allowInsecureSslCheckBox;
 
     private RabbitProfile rabbitProfile;
 
@@ -47,6 +49,7 @@ public class EditRabbitProfileDialog extends DialogWrapper {
         this.virtualHostTextField.setText(this.rabbitProfile.getVirtualHost());
         this.userTextField.setText(this.rabbitProfile.getUser());
         this.passwordTextField.setText(this.rabbitProfile.getPassword());
+        this.allowInsecureSslCheckBox.setSelected(this.rabbitProfile.isAllowingInsecureTls());
         RabbitConfiguration.Protocol[] protocols = { RabbitConfiguration.Protocol.HTTP, RabbitConfiguration.Protocol.HTTPS };
         DefaultComboBoxModel<RabbitConfiguration.Protocol> protocolComboBoxModel = new DefaultComboBoxModel<RabbitConfiguration.Protocol>(protocols);
         protocolComboBoxModel.setSelectedItem(this.rabbitProfile.getProtocol());
@@ -78,6 +81,7 @@ public class EditRabbitProfileDialog extends DialogWrapper {
         this.rabbitProfile.setUser(this.userTextField.getText());
         this.rabbitProfile.setPassword(this.passwordTextField.getText());
         this.rabbitProfile.setProtocol((RabbitConfiguration.Protocol) this.protocolComboBox.getSelectedItem());
+        this.rabbitProfile.setAllowingInsecureTls(this.allowInsecureSslCheckBox.isSelected());
         super.doOKAction();
     }
 

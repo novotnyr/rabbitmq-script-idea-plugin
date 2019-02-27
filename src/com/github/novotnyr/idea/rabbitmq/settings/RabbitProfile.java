@@ -71,5 +71,13 @@ public class RabbitProfile {
         this.rabbitConfiguration.setProtocol(protocol);
     }
 
+    public boolean isAllowingInsecureTls() {
+        return this.rabbitConfiguration.isAllowingInsecureTls();
+    }
+
+    public void setAllowingInsecureTls(boolean allowingInsecureTls) {
+        this.rabbitConfiguration.setAllowingInsecureTls(allowingInsecureTls);
+    }
+
 
 }
