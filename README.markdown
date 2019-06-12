@@ -32,12 +32,13 @@ Sample Script
     ---
     publish: amq.default
     routing-key: cabbage
+    description: Notify a truckload of veggies
     headers:
       X-Correlation-ID: 12cba88f
       X-Domain: vegetables
     json: >
       {
-          "message" : "Message number five"
+          "message" : "A truckload of veggies has arrived"
       }
     reply-to: reply
 
@@ -78,6 +79,7 @@ Please observe a double line indicating an empty first document.
     ---
     publish: amq.default
     routing-key: cabbage
+    description: Notify a truckload of veggies
     json: >
       {
           "message" : "Message number five"
@@ -90,6 +92,7 @@ Please observe a double line indicating an empty first document.
 
 * `publish`: name of the exchange that will receive a message for further routing
 * `routing-key`: routing key used with the message publication
+* `description`: an arbitrary comment-like human-readable text
 * `json`: provide a JSON payload. Message will be sent with `application/json` content type
 * `payload`: an alternative to `json` key. A string message will be sent.
 * `headers`: a map of message headers and values. Please note that these are *headers*, not *properties*!
@@ -104,6 +107,7 @@ Please observe a double line indicating an empty first document.
     get: cabbage
 
 * `get`: name of the queue used to consume the message
+* `description`: an arbitrary comment-like human-readable text
 
 The message will be consumed with acknowledgement and no requeuing by default.
 
