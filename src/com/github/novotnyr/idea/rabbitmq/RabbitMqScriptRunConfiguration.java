@@ -3,7 +3,7 @@ package com.github.novotnyr.idea.rabbitmq;
 import com.github.novotnyr.idea.rabbitmq.editor.FileProfileService;
 import com.github.novotnyr.idea.rabbitmq.settings.PluginSettings;
 import com.github.novotnyr.idea.rabbitmq.settings.RabbitProfile;
-import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
+import com.github.novotnyr.scotch.RabbitConfiguration;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.Executor;
 import com.intellij.execution.configurations.ConfigurationFactory;

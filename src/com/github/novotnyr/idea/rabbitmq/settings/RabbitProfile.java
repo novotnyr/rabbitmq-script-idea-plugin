@@ -1,6 +1,7 @@
 package com.github.novotnyr.idea.rabbitmq.settings;
 
-import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
+
+import com.github.novotnyr.scotch.RabbitConfiguration;
 
 public class RabbitProfile {
     private String name;

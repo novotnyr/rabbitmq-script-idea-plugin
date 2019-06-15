@@ -2,16 +2,21 @@ package com.github.novotnyr.idea.rabbitmq;
 
 import com.github.novotnyr.idea.rabbitmq.console.PublishToExchangeOutputSerializer;
 import com.github.novotnyr.idea.rabbitmq.console.StdOut;
-import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
-import com.github.novotnyr.rabbitmqadmin.RabbitMqConnectionException;
-import com.github.novotnyr.rabbitmqadmin.command.ExecuteScript;
-import com.github.novotnyr.rabbitmqadmin.command.GetMessage;
-import com.github.novotnyr.rabbitmqadmin.command.PublishToExchange;
-import com.github.novotnyr.rabbitmqadmin.command.RabbitMqAccessDeniedException;
-import com.github.novotnyr.rabbitmqadmin.command.script.GetMessageStdErrOutputSerializer;
-import com.github.novotnyr.rabbitmqadmin.log.StdErr;
+import com.github.novotnyr.scotch.RabbitConfiguration;
+import com.github.novotnyr.scotch.RabbitMqAccessDeniedException;
+import com.github.novotnyr.scotch.RabbitMqConnectionException;
+import com.github.novotnyr.scotch.command.GetMessage;
+import com.github.novotnyr.scotch.command.PublishToExchange;
+import com.github.novotnyr.scotch.command.script.ExecuteScript;
+import com.github.novotnyr.scotch.command.script.StdErr;
+import com.github.novotnyr.scotch.command.script.ser.GetMessageStdErrOutputSerializer;
 import com.intellij.execution.process.ProcessOutputTypes;
 import com.intellij.psi.PsiFile;
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
+import kotlin.coroutines.EmptyCoroutineContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -65,10 +70,20 @@ public class RabbitMqScriptProcessHandler extends CallableProcessHandler {
 
     private void run(ExecuteScript executeScript) {
         try {
-            executeScript.run();
-            notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM);
-            notifyProcessTerminated(0);
-        } catch (RabbitMqConnectionException e) {
+            executeScript.run(new Continuation<Unit>() {
+                @NotNull
+                @Override
+                public CoroutineContext getContext() {
+                    return EmptyCoroutineContext.INSTANCE;
+                }
+
+                @Override
+                public void resumeWith(@NotNull Object o) {
+                    notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM);
+                    notifyProcessTerminated(0);
+                }
+            });
+       } catch (RabbitMqConnectionException e) {
             notifyTextAvailable(e.getMessage(), ProcessOutputTypes.STDERR);
         } catch (RabbitMqAccessDeniedException e) {
             notifyTextAvailable("Access denied to RabbitMQ broker. Please verify the credentials", ProcessOutputTypes.STDERR);

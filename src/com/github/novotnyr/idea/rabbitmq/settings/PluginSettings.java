@@ -6,9 +6,10 @@ import com.intellij.ide.passwordSafe.PasswordSafe;
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import org.apache.commons.beanutils.BeanUtils;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.BeanUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class PluginSettings implements PersistentStateComponent<PluginSettings.S
         for (RabbitProfile rabbitProfile : this.state.rabbitProfiles) {
             RabbitProfile persistedRabbitProfile = new RabbitProfile();
             persistedRabbitProfile.setName(rabbitProfile.getName());
-            BeanUtils.copyProperties(rabbitProfile.getRabbitConfiguration(), persistedRabbitProfile.getRabbitConfiguration());
+            copy(rabbitProfile, persistedRabbitProfile);
             persistedRabbitProfile.setPassword(null);
             persistedState.getRabbitProfiles().add(persistedRabbitProfile);
 
@@ -37,6 +38,14 @@ public class PluginSettings implements PersistentStateComponent<PluginSettings.S
         }
 
         return persistedState;
+    }
+
+    private void copy(RabbitProfile rabbitProfile, RabbitProfile persistedRabbitProfile) {
+        try {
+            BeanUtils.copyProperties(persistedRabbitProfile.getRabbitConfiguration(), rabbitProfile.getRabbitConfiguration());
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalArgumentException("Cannot load persistent Rabbit Profile", e);
+        }
     }
 
     @Override

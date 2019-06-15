@@ -1,6 +1,6 @@
 package com.github.novotnyr.idea.rabbitmq.settings;
 
-import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
+import com.github.novotnyr.scotch.RabbitConfiguration;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.openapi.ui.ValidationInfo;

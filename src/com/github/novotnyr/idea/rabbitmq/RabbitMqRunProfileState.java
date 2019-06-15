@@ -1,6 +1,6 @@
 package com.github.novotnyr.idea.rabbitmq;
 
-import com.github.novotnyr.rabbitmqadmin.RabbitConfiguration;
+import com.github.novotnyr.scotch.RabbitConfiguration;
 import com.intellij.execution.DefaultExecutionResult;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.ExecutionResult;

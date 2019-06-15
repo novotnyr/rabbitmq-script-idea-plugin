@@ -1,9 +1,10 @@
 package com.github.novotnyr.idea.rabbitmq.console;
 
-import com.github.novotnyr.rabbitmqadmin.command.PublishToExchange;
-import com.github.novotnyr.rabbitmqadmin.command.PublishToExchangeResponse;
-import com.github.novotnyr.rabbitmqadmin.command.script.ScriptOutputSerializer;
-import com.github.novotnyr.rabbitmqadmin.log.StdErr;
+
+import com.github.novotnyr.scotch.command.PublishToExchange;
+import com.github.novotnyr.scotch.command.api.PublishToExchangeResponse;
+import com.github.novotnyr.scotch.command.script.ScriptOutputSerializer;
+import com.github.novotnyr.scotch.command.script.StdErr;
 
 public class PublishToExchangeOutputSerializer implements ScriptOutputSerializer<PublishToExchange, PublishToExchangeResponse> {
     private final StdOut stdOut;
