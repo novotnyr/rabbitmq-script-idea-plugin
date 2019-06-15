@@ -1,4 +1,6 @@
-.idea
-*.iml
-out
-/rabbitmq-script-idea-plugin.zip
+.gradle/
+build
+.idea/
+gradle/
+gradlew
+gradlew.bat
