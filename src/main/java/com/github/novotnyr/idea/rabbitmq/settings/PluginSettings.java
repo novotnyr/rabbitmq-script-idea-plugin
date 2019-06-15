@@ -22,6 +22,8 @@ public class PluginSettings implements PersistentStateComponent<PluginSettings.S
 
     private PasswordSafe passwordSafe = PasswordSafe.getInstance();
 
+    public static final String NO_PASSWORD = "";
+
     @Nullable
     @Override
     public State getState() {
@@ -30,7 +32,7 @@ public class PluginSettings implements PersistentStateComponent<PluginSettings.S
             RabbitProfile persistedRabbitProfile = new RabbitProfile();
             persistedRabbitProfile.setName(rabbitProfile.getName());
             copy(rabbitProfile, persistedRabbitProfile);
-            persistedRabbitProfile.setPassword(null);
+            persistedRabbitProfile.setPassword(NO_PASSWORD);
             persistedState.getRabbitProfiles().add(persistedRabbitProfile);
 
             CredentialAttributes credentialAttributes = getCredentialAttributes(rabbitProfile);
