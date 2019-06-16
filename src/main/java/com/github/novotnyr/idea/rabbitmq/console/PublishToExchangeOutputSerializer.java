@@ -28,7 +28,7 @@ public class PublishToExchangeOutputSerializer implements ScriptOutputSerializer
 
     private String formatDescription(PublishToExchange command) {
         String desc = command.getDescription();
-        if (desc != null) {
+        if (!desc.isEmpty()) {
             return "'" + desc + "' ";
         }
         return "";
