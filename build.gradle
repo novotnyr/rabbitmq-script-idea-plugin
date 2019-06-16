@@ -24,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation('com.github.novotnyr:scotch:0.0.1-SNAPSHOT') {
+    implementation('com.github.novotnyr:scotch:0.0.2-SNAPSHOT') {
         exclude group: 'org.slf4j', module:  'jcl-over-slf4j'
     }
     implementation 'org.yaml:snakeyaml:1.21'
