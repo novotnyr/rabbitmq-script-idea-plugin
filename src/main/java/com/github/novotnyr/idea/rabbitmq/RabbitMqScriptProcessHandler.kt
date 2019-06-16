@@ -1,5 +1,6 @@
 package com.github.novotnyr.idea.rabbitmq
 
+import com.github.novotnyr.idea.rabbitmq.console.GetMessageOutputSerializer
 import com.github.novotnyr.idea.rabbitmq.console.PublishToExchangeOutputSerializer
 import com.github.novotnyr.idea.rabbitmq.console.StdOut
 import com.github.novotnyr.scotch.RabbitConfiguration
@@ -10,8 +11,6 @@ import com.github.novotnyr.scotch.command.PublishToExchange
 import com.github.novotnyr.scotch.command.api.PublishToExchangeResponse
 import com.github.novotnyr.scotch.command.script.ExecuteScript
 import com.github.novotnyr.scotch.command.script.StdErr
-import com.github.novotnyr.scotch.command.script.ser.GetMessageStdErrOutputSerializer
-import com.github.novotnyr.scotch.domain.RetrievedMessage
 import com.intellij.execution.process.ProcessOutputTypes
 import com.intellij.psi.PsiFile
 import kotlinx.coroutines.GlobalScope
@@ -81,7 +80,7 @@ class RabbitMqScriptProcessHandler(
     }
 
     private fun configureOutputSerializers(executeScript: ExecuteScript, stdOut: StdOut, stdErr: StdErr) {
-        executeScript.setOutputSerializer<GetMessage, List<RetrievedMessage>>(GetMessage::class.java, GetMessageStdErrOutputSerializer(stdErr))
+        executeScript.setOutputSerializer(GetMessage::class.java, GetMessageOutputSerializer(stdOut))
         executeScript.setOutputSerializer<PublishToExchange, PublishToExchangeResponse>(PublishToExchange::class.java, PublishToExchangeOutputSerializer(stdOut, stdErr))
     }
 
