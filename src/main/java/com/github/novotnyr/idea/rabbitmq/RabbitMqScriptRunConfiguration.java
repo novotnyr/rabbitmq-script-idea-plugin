@@ -19,6 +19,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.yaml.psi.YAMLFile;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -75,10 +76,21 @@ public class RabbitMqScriptRunConfiguration extends LocatableConfigurationBase {
             if (maybeRabbitProfile.isPresent()) {
                 return maybeRabbitProfile.get().getRabbitConfiguration();
             } else {
-                return null;
+                return inferRabbitConfiguration(this.rabbitMqScriptPsiFile)
+                        .orElse(null);
             }
         }
         return null;
+    }
+
+    private Optional<RabbitConfiguration> inferRabbitConfiguration(PsiFile rabbitMqScriptPsiFile) {
+        if (!(rabbitMqScriptPsiFile instanceof YAMLFile)) {
+            return Optional.empty();
+        }
+        YAMLFile rabbitMqScriptYamlFile = (YAMLFile) rabbitMqScriptPsiFile;
+        PsiFileRabbitConfigurationProvider rabbitConfigurationProvider
+                = new PsiFileRabbitConfigurationProvider(rabbitMqScriptYamlFile);
+        return rabbitConfigurationProvider.getRabbitConfiguration();
     }
 
     public void setRabbitMqScriptPsiFile(PsiFile rabbitMqScriptPsiFile) {

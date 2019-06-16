@@ -39,8 +39,7 @@ class RabbitMqScriptProcessHandler(
             return NOTHING
         }
         val scriptFile = this.scriptPsiFile.virtualFile.path
-        val executeScript = ExecuteScript(this.rabbitConfiguration)
-        executeScript.scriptFile = scriptFile
+        val executeScript = ExecuteScript(this.rabbitConfiguration, scriptFile)
         executeScript.includedCommandIndices = listOf(this.scriptIndex)
         val stdErr = object : StdErr {
             override fun println(message: String) {
