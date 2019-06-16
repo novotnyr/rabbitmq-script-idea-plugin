@@ -66,19 +66,18 @@ class RabbitMqScriptProcessHandler(
     }
 
     private fun run(executeScript: ExecuteScript) {
-        try {
             GlobalScope.launch {
-                executeScript.run()
-                notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM)
-                notifyProcessTerminated(0)
+                try {
+                    executeScript.run()
+                    notifyTextAvailable("RabbitMQ script completed", ProcessOutputTypes.SYSTEM)
+                    notifyProcessTerminated(0)
+                } catch (e: RabbitMqConnectionException) {
+                    notifyTextAvailable(e.message!!, ProcessOutputTypes.STDERR)
+                } catch (e: RabbitMqAccessDeniedException) {
+                    notifyTextAvailable("Access denied to RabbitMQ broker. Please verify the credentials", ProcessOutputTypes.STDERR)
+                    notifyProcessTerminated(3)
+                }
             }
-        } catch (e: RabbitMqConnectionException) {
-            notifyTextAvailable(e.message!!, ProcessOutputTypes.STDERR)
-        } catch (e: RabbitMqAccessDeniedException) {
-            notifyTextAvailable("Access denied to RabbitMQ broker. Please verify the credentials", ProcessOutputTypes.STDERR)
-            notifyProcessTerminated(3)
-        }
-
     }
 
     private fun configureOutputSerializers(executeScript: ExecuteScript, stdOut: StdOut, stdErr: StdErr) {
