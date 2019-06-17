@@ -4,7 +4,14 @@
   <vendor email="novotnr0@gmail.com" url="https://github.com/novotnyr/rabbitmq-script-idea-plugin">Róbert Novotny</vendor>
 
   <description><![CDATA[
-      Adds support for RabbitMQ commands executed via YAML-based scripts
+      Adds support for RabbitMQ commands executed via YAML-based scripts against Broker HTTP API
+      <ul>
+      <li>Prepare script files with executable blocks</li>
+      <li>Execute whole script or just the relevant sections</li>
+      <li>Define multiple RabbitMQ connection profiles to execute a single script on multiple environments</li>
+      <li>Support HTTP and HTTPS connection and RabbitMQ user/password authentication</li>
+      <li>Target RabbitMQ broker must expose HTTP API via its <a href="https://www.rabbitmq.com/management.html">Management Plugin</a></li>
+      </ul>
     ]]></description>
 
   <depends>com.intellij.modules.lang</depends>
