@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'com.github.novotnyr'
-version '3-SNAPSHOT'
+version '3'
 
 sourceCompatibility = 1.8
 
@@ -45,7 +45,8 @@ patchPluginXml {
     untilBuild '191.*'
     changeNotes """
       <ul>
-          <li>Initial release</i>
+          <li>Fix issues with inline configuration</i>
+          <li>Handle various error statuses in command executions</i> 
       </ul>
       """
 
