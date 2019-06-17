@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'com.github.novotnyr'
-version '1-SNAPSHOT'
+version '2'
 
 sourceCompatibility = 1.8
 
@@ -43,6 +43,11 @@ intellij {
 patchPluginXml {
     sinceBuild '181'
     untilBuild '191.*'
-    changeNotes """"""
+    changeNotes """
+      <ul>
+          <li>Initial release</i>
+      </ul>
+      """
+
 }
 
