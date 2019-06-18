@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'com.github.novotnyr'
-version '4-SNAPSHOT'
+version '4'
 
 sourceCompatibility = 1.8
 
@@ -45,8 +45,9 @@ patchPluginXml {
     untilBuild '191.*'
     changeNotes """
       <ul>
-          <li>Fix issues with inline configuration</i>
-          <li>Handle various error statuses in command executions</i> 
+          <li>Support message headers in 'publish' command</i>
+          <li>Add <em>exchanges</em> command to list all exchanges
+          <li>Add <em>binding</em> command to declare a binding 
       </ul>
       """
 
