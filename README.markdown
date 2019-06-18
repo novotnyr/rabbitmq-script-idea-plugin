@@ -111,6 +111,32 @@ Please observe a double line indicating an empty first document.
 
 The message will be consumed with acknowledgement and no requeuing by default.
 
+`binding` Command: Declare Binding
+----------------------------------
+
+```yaml
+binding:
+  exchange: food
+  queue: cabbage
+  routing-key: cabbage
+```
+
+* `exchange`: name of the exchange to bind from
+* `queue`: name of the queue to bind to
+* `routing-key`: associated with binding
+
+
+`exchanges` Command: List Exchanges
+-----------------------------------
+
+```yaml
+exchanges:
+  vhost: /
+```
+
+* `vhost` (optional): list exchanges of the specified virtual host. If
+left out, all relevant exchanges are listed
+
 Profiles
 ========
 Each script can be run with an explicit configuration profile. This profile
